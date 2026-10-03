@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class RecipeDetailsScreen extends StatelessWidget {
@@ -8,6 +7,7 @@ class RecipeDetailsScreen extends StatelessWidget {
   final List<String> instructions;
   final String preparationTime;
   final int servings;
+  final String imageUrl;
 
   const RecipeDetailsScreen({
     super.key,
@@ -17,6 +17,7 @@ class RecipeDetailsScreen extends StatelessWidget {
     required this.instructions,
     required this.preparationTime,
     required this.servings,
+    this.imageUrl = '',
   });
 
   @override
@@ -33,6 +34,54 @@ class RecipeDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // RECIPE IMAGE
+            if (imageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Image.network(
+                  imageUrl,
+                  width: double.infinity,
+                  height: 240,
+                  fit: BoxFit.cover,
+                  loadingBuilder:
+                      (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+
+                    return Container(
+                      width: double.infinity,
+                      height: 240,
+                      color: const Color(0xFFFFE8D6),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: Color(0xFFE85D04),
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder:
+                      (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 240,
+                      color: const Color(0xFFFFE8D6),
+                      child: const Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 60,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+            if (imageUrl.isNotEmpty)
+              const SizedBox(height: 20),
+
+            // RECIPE NAME
             Text(
               recipeName,
               style: const TextStyle(
@@ -44,6 +93,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 12),
 
+            // DESCRIPTION
             Text(
               description,
               style: const TextStyle(
@@ -54,6 +104,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // TIME AND SERVINGS
             Row(
               children: [
                 const Icon(
@@ -63,7 +114,9 @@ class RecipeDetailsScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   preparationTime,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(width: 24),
                 const Icon(
@@ -73,13 +126,16 @@ class RecipeDetailsScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Text(
                   '$servings servings',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
               ],
             ),
 
             const SizedBox(height: 28),
 
+            // INGREDIENTS
             const Text(
               'Ingredients',
               style: TextStyle(
@@ -93,9 +149,11 @@ class RecipeDetailsScreen extends StatelessWidget {
 
             ...ingredients.map(
                   (ingredient) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
+                padding:
+                const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.check_circle_outline,
@@ -105,7 +163,9 @@ class RecipeDetailsScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         ingredient,
-                        style: const TextStyle(fontSize: 16),
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ],
@@ -115,6 +175,7 @@ class RecipeDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 28),
 
+            // COOKING INSTRUCTIONS
             const Text(
               'Cooking Instructions',
               style: TextStyle(
@@ -128,13 +189,16 @@ class RecipeDetailsScreen extends StatelessWidget {
 
             ...instructions.asMap().entries.map(
                   (entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
+                padding:
+                const EdgeInsets.only(bottom: 16),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
                   children: [
                     CircleAvatar(
                       radius: 16,
-                      backgroundColor: const Color(0xFFE85D04),
+                      backgroundColor:
+                      const Color(0xFFE85D04),
                       child: Text(
                         '${entry.key + 1}',
                         style: const TextStyle(
